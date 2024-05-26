@@ -5,7 +5,6 @@ const sequelize = require('../sequelize');
 describe('Reservation Search', () => {
 
   beforeAll(async () => {
-    // Get references to your Sequelize models
     await sequelize.sync({ force: true });
 
     // Seed your database with test data

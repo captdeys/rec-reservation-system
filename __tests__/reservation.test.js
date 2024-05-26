@@ -3,16 +3,12 @@ const app = require('../express/app'); // Import your Express app
 const sequelize = require('../sequelize');
 
 describe('Reservation', () => {
-  let Restaurant, Table, Reservation;
 
   beforeAll(async () => {
-    // Get references to your Sequelize models
-    Restaurant = models.restaurant;
-    Table = models.table;
-    Reservation = models.reservation;
+    await sequelize.sync({ force: true });
 
     // Seed your database with test data
-    await Restaurant.create({
+    await sequelize.models.restaurant.create({
       name: 'Test Restaurant',
       is_gluten_free_friendly: true,
       is_vegetarian_friendly: false,
@@ -20,7 +16,7 @@ describe('Reservation', () => {
       is_paleo_friendly: false,
     });
 
-    await Table.create({
+    await sequelize.models.table.create({
       restaurantId: 1,
       seating: 4,
       available: 2,
@@ -29,15 +25,15 @@ describe('Reservation', () => {
 
   afterAll(async () => {
     // Clean up the test data from the database
-    await Restaurant.destroy({ truncate: true });
-    await Table.destroy({ truncate: true });
-    await Reservation.destroy({ truncate: true });
+    await sequelize.models.restaurant.destroy({ truncate: true });
+    await sequelize.models.table.destroy({ truncate: true });
+    await sequelize.models.reservation.destroy({ truncate: true });
   });
 
-  describe('POST /reservations', () => {
+  describe('POST /reservation', () => {
     it('should create a new reservation', async () => {
       const response = await request(app)
-        .post('/reservations')
+        .post('/api/reservation')
         .send({
           reservation_name: 'John Doe',
           restaurant_id: 1,
@@ -53,7 +49,7 @@ describe('Reservation', () => {
 
     it('should return an error if required parameters are missing', async () => {
       const response = await request(app)
-        .post('/reservations')
+        .post('/api/reservation')
         .send({
           reservation_name: 'John Doe',
           time: new Date('2024-05-25 19:00:00').toISOString(),
@@ -65,11 +61,11 @@ describe('Reservation', () => {
     });
   });
 
-  describe('DELETE /reservations/:id', () => {
+  describe('DELETE /reservation/:id', () => {
     let reservationId;
 
     beforeAll(async () => {
-      const reservation = await Reservation.create({
+      const reservation = await sequelize.models.reservation.create({
         name: 'John Doe',
         capacity: 2,
         time: new Date('2024-05-25 19:00:00').getTime(),
@@ -79,21 +75,21 @@ describe('Reservation', () => {
     });
 
     it('should delete an existing reservation', async () => {
-      const response = await request(app).delete(`/reservations/${reservationId}`);
+      const response = await request(app).delete(`/api/reservation/${reservationId}`);
 
       expect(response.status).toBe(200);
       expect(response.body.msg).toBe('Successfully Deleted');
 
-      const deletedReservation = await Reservation.findByPk(reservationId);
+      const deletedReservation = await sequelize.models.reservation.findByPk(reservationId);
       expect(deletedReservation).toBeNull();
     });
 
     it('should return an error if the reservation does not exist', async () => {
       const nonExistingId = 999;
-      const response = await request(app).delete(`/reservations/${nonExistingId}`);
+      const response = await request(app).delete(`/api/reservation/${nonExistingId}`);
 
-      expect(response.status).toBe(500);
-      expect(response.body.msg).toBe('Internal server error');
+      expect(response.status).toBe(404);
+      expect(response.body.msg).toBe('Reservation not found');
     });
   });
 });

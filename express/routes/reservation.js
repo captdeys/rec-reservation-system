@@ -86,7 +86,7 @@ async function create(req, res) {
 	try {
 		const reservation = await Reservation.create({
 			name: reservationName,
-			restaurant_id: restaurantId,
+			restaurantId: restaurantId,
 			time: startTime,
 			capacity: capacity
 		});
@@ -99,22 +99,26 @@ async function create(req, res) {
 
 async function remove(req, res) {
 	const id = getIdParam(req);
-
+  
 	console.log(id);
-
+  
 	try {
-		await Reservation.destroy({
-			where: {
-				id: id
-			}
-		});
-
-		res.status(200).json({ msg: "Successfully Deleted" });
+	  const deletedCount = await Reservation.destroy({
+		where: {
+		  id: id,
+		},
+	  });
+  
+	  if (deletedCount === 0) {
+		return res.status(404).json({ msg: 'Reservation not found' });
+	  }
+  
+	  return res.status(200).json({ msg: 'Successfully Deleted' });
 	} catch (err) {
-		console.log(err);
-		return res.status(500).json({ msg: 'Internal server error' });
+	  console.log(err);
+	  return res.status(500).json({ msg: 'Internal server error' });
 	}
-};
+  }
 
 module.exports = {
 	create,
