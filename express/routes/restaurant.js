@@ -43,6 +43,20 @@ async function search(req, res) {
 		is_paleo_friendly: false,
 	  };
 
+	const options = dietaryOptions.split(',');
+	options.forEach((option) => {
+		const trimmedOption = option.trim().toLowerCase();
+		if (trimmedOption === 'gluten_free') {
+			dietaryRequirements.is_gluten_free_friendly = true;
+		} else if (trimmedOption === 'vegetarian') {
+			dietaryRequirements.is_vegetarian_friendly = true;
+		} else if (trimmedOption === 'vegan') {
+			dietaryRequirements.is_vegan_friendly = true;
+		} else if (trimmedOption === 'paleo') {
+			dietaryRequirements.is_paleo_friendly = true;
+		}
+	});
+
 	try {
 		const restaurants = await Restaurant.findAll({
 			where: dietaryRequirements,
