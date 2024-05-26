@@ -1,7 +1,9 @@
 const { DataTypes } = require('sequelize');
 
-// We export a function that defines the model.
-// This function will automatically receive as parameter the Sequelize connection object.
+/*
+	I didnt put an end time in effort to save my coding time since all reservations are 2 hours long
+	I would put an end time here to allow smaller or larger reservations time
+*/
 module.exports = (sequelize) => {
 	sequelize.define('reservation', {
 		// The following specification of the 'id' attribute could be omitted

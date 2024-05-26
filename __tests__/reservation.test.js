@@ -1,6 +1,12 @@
 const request = require('supertest');
-const app = require('../express/app'); // Import your Express app
+const app = require('../express/app');
 const sequelize = require('../sequelize');
+
+/*
+    Test I wanted to add but ran out of time
+    1. Check to see if reservation will be made if existing reservation already exists (manually tested already)
+    2. Check to see if reservation will be made if user already has existing reservation during the alloted time (manually tested already)
+*/
 
 describe('Reservation', () => {
 

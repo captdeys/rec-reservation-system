@@ -6,6 +6,15 @@ const Reservation = models.reservation;
 const Restaurant = models.restaurant;
 const Table = models.table;
 
+/*
+	Here you will can create the reservation
+	1. It checks to make sure the user does not have overlapping reservations
+	2. I don't do a check here again to see if the restaurants tables available, my assumption is that users would already have searched before coming here
+	3. If I were to do check for table availability, I would utilize the same search functions for restaurants to check if I get any results
+
+	We will assume the reservation name is tied to the user
+*/
+
 async function create(req, res) {
 
 	const { body } = req;

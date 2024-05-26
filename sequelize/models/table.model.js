@@ -1,7 +1,12 @@
 const { DataTypes } = require('sequelize');
+/*
+	Here are the tables in a restuarant
+	I split this into a new table due to allow restaurant to have any configurations possible
+	Perhaps a restuants has 5 seating table or 7 seating table. Its not the norm, but didnt want to restrict restaurants
+	It makes it easier for a start up to add new features faster 
+	It will make some impact to performance
+*/
 
-// We export a function that defines the model.
-// This function will automatically receive as parameter the Sequelize connection object.
 module.exports = (sequelize) => {
 	sequelize.define('table', {
 		// The following specification of the 'id' attribute could be omitted

@@ -6,20 +6,21 @@ const Reservation = models.reservation;
 const Restaurant = models.restaurant;
 const Table = models.table;
 
+/*
+	Here you will find the restuarants that match the criteria
+	1. Where there must be seats available (not already occupied by an existing reservation)
+	2. Must meet the dietary requirements.
+
+	Once you find the retaurant that meets this criteria, then take the restaurant ID and create the reservation
+*/
+
 async function search(req, res) {
 
 	const { query } = req;
 
-	const restaurantName = query.restaurant_name;
 	const time = query.time;
 	const reservationCapacity = query.capacity;
 	const dietaryOptions = query.dietary_options;
-
-	console.log(query);
-
-	if (!restaurantName){
-		return res.status(400).send(`Restaurant Name (restaurant_name) is required`)
-	}
 
 	if (!time){
 		return res.status(400).send(`Time (time) is required`)
@@ -36,12 +37,7 @@ async function search(req, res) {
 	// 2024-05-25 19:00:00
 	const startTime = new Date(time).getTime();
 
-	const dietaryRequirements = {
-		is_gluten_free_friendly: true,
-		is_vegetarian_friendly: false,
-		is_vegan_friendly: false,
-		is_paleo_friendly: false,
-	  };
+	const dietaryRequirements = { };
 
 	const options = dietaryOptions.split(',');
 	options.forEach((option) => {

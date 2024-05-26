@@ -30,8 +30,6 @@ async function reset() {
 		{ restaurantId: 4, seating: 6, available: 1 },
 
 		{ restaurantId: 5, seating: 2, available: 1 },
-		{ restaurantId: 5, seating: 4, available: 1 },
-		{ restaurantId: 5, seating: 6, available: 1 },
 	]);
 
 	console.log('Done!');

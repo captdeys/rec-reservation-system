@@ -1,8 +1,14 @@
 const request = require('supertest');
-const app = require('../express/app'); // Import your Express app
+const app = require('../express/app');
 const sequelize = require('../sequelize');
 
-describe('Reservation Search', () => {
+/*
+    Test I wanted to add but ran out of time
+    1. Check to see if restaurant will be found if tables are fully reservered (manually tested already)
+    2. Check to see if restaurant will be found if it meets dietary restrictions (manually tested already)
+*/
+
+describe('Restaurant Search', () => {
 
   beforeAll(async () => {
     await sequelize.sync({ force: true });
