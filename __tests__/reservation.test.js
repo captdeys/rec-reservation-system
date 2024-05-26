@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../express/app'); // Import your Express app
-const { models } = require('../sequelize'); // Import your Sequelize models
+const sequelize = require('../sequelize');
 
 describe('Reservation', () => {
   let Restaurant, Table, Reservation;

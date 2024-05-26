@@ -1,18 +1,15 @@
 const request = require('supertest');
 const app = require('../express/app'); // Import your Express app
-const { models } = require('../sequelize'); // Import your Sequelize models
+const sequelize = require('../sequelize');
 
 describe('Reservation Search', () => {
-  let Restaurant, Table, Reservation;
 
   beforeAll(async () => {
     // Get references to your Sequelize models
-    Restaurant = models.restaurant;
-    Table = models.table;
-    Reservation = models.reservation;
+    await sequelize.sync({ force: true });
 
     // Seed your database with test data
-    await Restaurant.bulkCreate([
+    await sequelize.models.restaurant.bulkCreate([
       {
         name: 'Restaurant A',
         is_gluten_free_friendly: true,
@@ -29,7 +26,8 @@ describe('Reservation Search', () => {
       },
     ]);
 
-    await Table.bulkCreate([
+
+    await sequelize.models.table.bulkCreate([
       {
         restaurantId: 1,
         seating: 4,
@@ -42,11 +40,11 @@ describe('Reservation Search', () => {
       },
     ]);
 
-    await Reservation.bulkCreate([
+    await sequelize.models.reservation.bulkCreate([
       {
         name: 'John Doe',
         capacity: 2,
-        time: new Date('2024-05-25 18:00:00').getTime(),
+        time: new Date('2024-05-27 18:00:00').getTime(),
         restaurantId: 1,
       },
     ]);
@@ -54,14 +52,14 @@ describe('Reservation Search', () => {
 
   afterAll(async () => {
     // Clean up the test data from the database
-    await Restaurant.destroy({ truncate: true });
-    await Table.destroy({ truncate: true });
-    await Reservation.destroy({ truncate: true });
+    await sequelize.models.restaurant.destroy({ truncate: true });
+    await sequelize.models.table.destroy({ truncate: true });
+    await sequelize.models.reservation.destroy({ truncate: true });
   });
 
   it('should return restaurants with available tables and matching dietary requirements', async () => {
     const response = await request(app)
-      .get('/reservations/search')
+      .get('/api/restaurant/search')
       .query({
         restaurant_name: 'Restaurant A',
         time: new Date('2024-05-25 20:00:00').toISOString(),
@@ -76,7 +74,7 @@ describe('Reservation Search', () => {
 
   it('should return an error if required parameters are missing', async () => {
     const response = await request(app)
-      .get('/reservations/search')
+      .get('/api/restaurant/search')
       .query({
         time: new Date('2024-05-25 20:00:00').toISOString(),
         capacity: 4,
